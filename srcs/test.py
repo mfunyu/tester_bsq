@@ -1,35 +1,26 @@
 import sys
 
-
 class Map():
 
-    def __init__(self):
-        self.emp = '.'
-        self.obs = 'o'
-        self.full = 'x'
+    def __init__(self, x, y, emp, obs, full):
+        self.emp = emp
+        self.obs = obs
+        self.full = full
 
-        av = sys.argv
-        ac = len(av)
-        try:
-            s = av[1].split('x')
-            self.x = int(s[0])
-            self.y = int(s[1])
-        except:
-            exit(0)
-        try:
-            if ac > 3:
-                self.emp = av[3][0]
-                self.obs = av[3][1]
-                self.full = av[3][2]
-        except:
-            print("Error: test.py")
-            exit(-1)
+        self.x = int(x)
+        self.y = int(y)
         self.map = []
-        self.read_map()
 
-    def read_map(self):
+    def read_map(self, cnt):
         with open ("tmp") as f:
             for line in f:
+                if line == '\n':
+                    if cnt <= 0:
+                        break
+                    cnt = cnt - 1
+                    continue
+                if cnt > 0:
+                    continue
                 self.map.append(list(line.strip()))
 
     def check_map(self):
@@ -45,6 +36,7 @@ class Map():
                 if cnt > self.sq_max:
                     ret = self.bigger_sq_found(cnt, y, x)
                     if ret:
+                        # print(y, x)
                         print ("Error: wrong answer")
                         exit(1)
                     x = x - cnt + 2
@@ -59,10 +51,13 @@ class Map():
         while j < cnt:
             i = 0
             while i < cnt:
+                # print (self.map[y+i][x+j], end="")
                 if self.map[y+i][x+j] == self.obs:
                     return False
                 i = i + 1
+            # print ()
             j = j + 1
+        # print(y+i, x+j)
         return True
 
 
@@ -85,10 +80,33 @@ class Map():
                     return y, x
         return self.y, self.x
 
+    def __str__(self):
+        str = ""
+        for line in self.map:
+            str = str + ' '.join(line) + '\n'
+        return str
 
 def main():
-    map = Map()
-    map.check_map()
+    av = sys.argv
+    ac = len(av)
+
+    start = 1
+    emp = '.'
+    obs = 'o'
+    full = 'x'
+    if av[1][0] < '0' or '9' < av[1][0]:
+        emp = av[1][0]
+        obs = av[1][1]
+        full = av[1][2]
+        start = start + 1
+    cnt = 0
+    for i in range(start, ac):
+        s = av[i].split('x')
+        map = Map(s[0], s[1], emp, obs, full)
+        map.read_map(cnt)
+        # print (map)
+        map.check_map()
+        cnt = cnt + 1
     return (0)
 
 if __name__ == "__main__":
