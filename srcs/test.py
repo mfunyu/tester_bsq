@@ -102,10 +102,13 @@ def main():
     cnt = 0
     for i in range(start, ac):
         s = av[i].split('x')
-        map = Map(s[0], s[1], emp, obs, full)
-        map.read_map(cnt)
-        # print (map)
-        map.check_map()
+        try:
+            map = Map(s[0], s[1], emp, obs, full)
+            map.read_map(cnt)
+            # print (map)
+            map.check_map()
+        except:
+            exit(2)
         cnt = cnt + 1
     return (0)
 
