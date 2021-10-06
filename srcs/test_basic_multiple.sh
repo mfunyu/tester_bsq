@@ -23,7 +23,7 @@ read_multiple_maps_check_ans (){
 			print_result $ret
 		else
 			check_ans $maps
-			print_result 0
+			print_result $?
 		fi
 	done
 }
